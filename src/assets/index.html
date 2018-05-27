@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>actix-httpbin: HTTP Client Testing Service</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style media="all">
+            * {
+                margin: 0;
+                padding: 0;
+                border: 0;
+                font-size: 100%;
+                font: inherit;
+                vertical-align: baseline;
+            }
+            body {
+                display: flex;
+                flex-wrap: wrap;
+                line-height: 1.15;
+                padding: 1em 5em;
+                text-rendering: optimizeLegibility;
+                font-family: FreeSans, Arimo, "Droid Sans", Helvetica, Arial, sans-serif;
+                background-color: #f2f3f4;
+                color: #373d3f;
+            }
+            main {
+                flex: 3 30em;
+            }
+            aside {
+                flex: 1 20em;
+            }
+            a, a:visited {
+                color: #0f5b78;
+            }
+            h1 {
+                font-size: 2em;
+                margin: 0.67em 0;
+                color: #373d3f;
+            }
+            h2 {
+                font-size: 1.2em;
+                color: #373d3f;
+                padding: 0.5em 0em;
+            }
+            dt, dd {
+                display: inline;
+                margin: 0.2em 0;
+                clear: right;
+            }
+            footer {
+                margin-top: 1.5em;
+                line-height: 1.5em;
+            }
+            code {
+                display: block;
+                font-family: monospace, monospace;
+                font-size: 0.9em;
+                margin: 0.67em 0;
+                padding: 0.67em 1em;
+                color: #00ff00;
+                background-color: #293538;
+            }
+            code:before {
+                content: "$ ";
+            }
+            table {
+                border-spacing: 0;
+                border-collapse: collapse;
+                font-size: 0.9em;
+            }
+            th, td {
+                text-align: left;
+                padding: 0.2em 1em 0.2em 0;
+                border: 0;
+            }
+            th {
+                width: 25em;
+                font-family: monospace, monospace;
+            }
+            th a {
+                display: inline-block;
+            }
+            td {
+                width: 20em;
+            }
+            ul {
+                list-style: none;
+            }
+            em {
+                font-family: monospace, monospace;
+                font-size: 0.9em;
+            }
+        </style>
+</head>
+<body>
+    <main>
+        <h1>actix-httpbin</h1>
+
+        <section>
+            <h2>HTTP methods</h2>
+            <table>
+                <tbody>
+                    <tr>
+                        <th><a href="/get">/get</a></th>
+                        <td>GET data</td>
+                    </tr>
+                    <tr>
+                        <th>/post</th>
+                        <td>POST data</td>
+                    </tr>
+                    <tr>
+                        <th>/patch</th>
+                        <td>PATCH data</td>
+                    </tr>
+                    <tr>
+                        <th>/put</th>
+                        <td>PUT data</td>
+                    </tr>
+                    <tr>
+                        <th>/delete</th>
+                        <td>DELETE data</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </section>
+
+        <section>
+            <h2>Auth</h2>
+            <table>
+                <tbody>
+                    <tr>
+                        <th><a href="/basic-auth/user/passwd">/basic-auth/{user}/{passwd}</a></th>
+                        <td>Challenges HTTP Basic Auth</td>
+                    </tr>
+                    <tr>
+                        <th><a href="/hidden-basic-auth/user/passwd">/hidden-basic-auth/{user}/{passwd}</a></th>
+                        <td>404'd HTTP Basic Auth</td>
+                    </tr>
+                    <tr>
+                        <th><a href="/digest-auth/auth/user/passwd/MD5/never">/digest-auth/{qop}/{user}/{passwd}/{algorithm}</a></th>
+                        <td>Challenges HTTP Digest Auth</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h2>Status codes</h2>
+            <table>
+                <tbody>
+                    <tr>
+                        <th><a href="/status/418">/status/{code}</a></th>
+                        <td>Given HTTP status code</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h2>Request inspection</h2>
+            <table>
+                <tbody>
+                    <tr>
+                        <th><a href="/ip">/ip</a></th>
+                        <td>Requester IP address</td>
+                    </tr>
+                    <tr>
+                        <th><a href="/headers">/headers</a></th>
+                        <td>HTTP headers</td>
+                    </tr>
+                    <tr>
+                        <th><a href="/user-agent">/user-agent</a></th>
+                        <td><em>User-Agent</em> header</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h2>Response inspection</h2>
+            <table>
+                <tbody>
+                    <tr>
+                        <th><a href="/cache">/cache</a></th>
+                        <td>Returns a HTTP 304 if an <em>If-Modified-Since</em> or <em>If-None-Match</em> is present</td>
+                    </tr>
+                    <tr>
+                        <th><a href="/cache/60">/cache/{value}</a></th>
+                        <td>Sets a <em>Cache-Control</em> header for <em>value</em> seconds</td>
+                    </tr>
+                    <tr>
+                        <th><a href="/etag/etag">/etag/{etag}</a></th>
+                        <td>Assumes the resource has the given <em>etag</em> and responds to <em>If-None-Match</em> and <em>If-Match</em> headers appropriately</td>
+                    </tr>
+                    <tr>
+                        <!-- TODO: form a proper URL here -->
+                        <th><a href="/response-headers?key=val">/response-headers?key=val</a></th>
+                        <td>Given response headers</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h2>Response formats</h2>
+            <table>
+                <tbody>
+                    <tr>
+                        <th><a href="/encoding/utf8">/encoding/utf8</a></th>
+                        <td>Page containing UTF-8 data</td>
+                    </tr>
+                    <tr>
+                        <th><a href="/gzip">/gzip</a></th>
+                        <td>Gzip-encoded data</td>
+                    </tr>
+                    <tr>
+                        <th><a href="/deflate">/deflate</a></th>
+                        <td>Deflate-encoded data</td>
+                    </tr>
+                    <tr>
+                        <th><a href="/brotli">/brotli</a></th>
+                        <td>Brotli-encoded data</td>
+                    </tr>
+                    <tr>
+                        <th><a href="/json">/json</a></th>
+                        <td>JSON document</td>
+                    </tr>
+                    <tr>
+                        <th><a href="/forms/post">/forms/post</a></th>
+                        <td>HTML form that posts to <em>/post</em></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h2>Dynamic data</h2>
+            <table>
+                <tbody>
+                    <tr>
+                        <th><a href="/uuid">/uuid</a></th>
+                        <td>UUID4</td>
+                    </tr>
+                    <tr>
+                        <th><a href="/base64/aGVsbG8gd29ybGQNCg==">/base64/{value}</a></th>
+                        <td>Decodes base64url-encoded string</td>
+                    </tr>
+                    <tr>
+                        <th><a href="/stream/5">/stream/{n}</a></th>
+                        <td>Stream <em>n</em> JSON responses</td>
+                    </tr>
+                    <tr>
+                        <th><a href="/delay/10">/delay/{n}</a></th>
+                        <td>Returns a response delayed to <em>{n}</em> seconds</td>
+                    </tr>
+                    <tr>
+                        <th><a href="/bytes/100">/bytes/{n}?seed={seed}</a></th>
+                        <td>Returns <em>{n}</em> random bytes generated with optional <em>{seed}</em></td>
+                    </tr>
+                    <tr>
+                        <th><a href="/stream-bytes/1000?seed=12345&chunk_size=10">/stream-bytes/{n}?seed={seed}&chunk_size={size}</a></th>
+                        <td>Streams <em>{n}</em> random bytes generated with optional <em>{seed}</em>, at given chunk <em>size</em> per packet.</td>
+                    </tr>
+                    <tr>
+                        <th><a href="/links/20/0">/links/{total}/{current}</a></th>
+                        <td>Generate a page containing <em>{total}</em> links to other pages which do the same.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h2>Redirects</h2>
+            <table>
+                <tbody>
+                    <tr>
+                        <th><a href="/redirect/6">/redirect/{n}</a></th>
+                        <td>302 redirects <em>{n}</em> times</td>
+                    </tr>
+                    <tr>
+                        <th><a href="/redirect-to?url=http://example.org">/redirect-to?url=foo</a></th>
+                        <td>302 redirects to the <em>foo</em> URL</td>
+                    </tr>
+                    <tr>
+                        <th><a href="/redirect-to?url=http://example.org&status_code=307">/redirect-to?url=foo&status_code=307</a></th>
+                        <td>302 redirects to the <em>foo</em> URL with optional <em>status_code</em></td>
+                    </tr>
+                    <tr>
+                        <th><a href="/relative-redirect/6">/relative-redirect/{n}</a></th>
+                        <td>302 relative redirects <em>{n}</em> times</td>
+                    </tr>
+                    <tr>
+                        <th><a href="/absolute-redirect/6">/absolute-redirect/{n}</a></th>
+                        <td>302 absolute redirects <em>{n}</em> times</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h2>Cookies</h2>
+            <table>
+                <tbody>
+                    <tr>
+                        <th><a href="/cookies">/cookies</a></th>
+                        <td>Cookie data</td>
+                    </tr>
+                    <tr>
+                        <th><a href="/cookies/set?k1=v1&k2=v2">/cookies/set?name=value</a></th>
+                        <td>Set one or more simple cookies</td>
+                    </tr>
+                    <tr>
+                        <th><a href="/cookies/set/k1/v1">/cookies/set/{name}/{value}</a></th>
+                        <td>Set one simple cookie with name <em>{name}</em> and value <em>{value}</em></td>
+                    </tr>
+                    <tr>
+                        <th><a href="/cookies/delete?k1=&k2=">/cookies/delete?name</a></th>
+                        <td>Delete one or more simple cookies</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h2>Anything</h2>
+            <table>
+                <tbody>
+                    <tr>
+                        <th><a href="/anything">/anything</a></th>
+                        <td>Request data, including method used</td>
+                    </tr>
+                    <tr>
+                        <th>/anything/{path}</th>
+                        <td>Request data, including method and URL used</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </section>
+    </main>
+
+    <aside>
+        <h1>notes</h1>
+        <header>
+            <a href="http://httpbin.org">httpbin(1)</a> clone
+            built with <a href="https://www.rust-lang.org">Rust</a> &
+            <a href="https://actix.rs/">actix</a>
+
+        </header>
+        <article>
+            <h2>run</h2>
+            <p>
+                1. Via Docker
+                <code>docker run -p 80:80 svartalf/actix-httpbin</code>
+            </p>
+            <p>
+                2. Install with <em>cargo</em>
+                <code>cargo install actix-httpbin</code>
+            </p>
+            <p>
+                3. Or <em>git clone</em> and
+                <code>cargo build --release</code>
+            </p>
+        </article>
+        <footer>
+            <h2>links</h2>
+            <ul>
+                <li>
+                    By <a href="https://github.com/svartalf">svartalf</a>
+                </li>
+                <li>
+                    <a href="https://github.com/svartalf/actix-httpbin">GitHub source</a>
+                </li>
+                <li>
+                    <a href="https://hub.docker.com/svartalf/actix-httpbin">Docker image</a>
+                </li>
+                <li>
+                    <a href="https://crates.io/crates/actix-httpbin">crates.io</a>
+                </li>
+            </ul>
+        </footer>
+
+    </aside>
+</body>
+</html>

@@ -1,0 +1,38 @@
+[package]
+name = "actix-httpbin"
+version = "0.1.0"
+authors = ["svartalf <self@svartalf.info>"]
+description = "httpbin.org clone with actix-web"
+homepage = "https://github.com/svartalf/actix-httpbin"
+repository = "https://github.com/svartalf/actix-httpbin"
+keywords = ["http", "web", "server", "testing", "tokio"]
+categories = ["asynchronous", "web-programming::http-server"]
+license = "Apache-2.0 OR MIT"
+
+[dependencies]
+actix-web = "0.6.10"
+serde = "1.0"
+serde_derive = "1.0"
+serde_json = { version = "1.0", features = ["preserve_order"] }
+serde_urlencoded = "0.5.1"
+linked-hash-map = { version = "0.5", features = ["serde_impl"] }
+uuid = { version = "0.6.3", features = ["serde"] }
+http = "0.1.5"
+url = "1.7.0"
+mime = "0.3.7"
+base64 = "0.9"
+env_logger = "0.5.10"
+futures = "0.1"
+bytes = "0.4"
+clap = { version = "2.31", default-features = false }
+tera = "0.11.7"
+tokio-timer = "0.2.1"
+rand = "0.4.2"
+actix-web-httpauth = "0.0.2"
+
+[features]
+default = []
+nightly = []
+
+[badges]
+travis-ci = { repository = "svartalf/actix-httpbin", branch = "master" }
