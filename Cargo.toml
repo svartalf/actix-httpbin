@@ -8,6 +8,7 @@ repository = "https://github.com/svartalf/actix-httpbin"
 keywords = ["http", "web", "server", "testing", "tokio"]
 categories = ["asynchronous", "web-programming::http-server"]
 license = "Apache-2.0 OR MIT"
+readme = "README.md"
 
 [dependencies]
 actix-web = "0.6.10"
