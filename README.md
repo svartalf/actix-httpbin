@@ -2,6 +2,9 @@
 
 [httpbin.org](https://httpbin.org) clone with an [actix-web](https://actix.rs) under the hood.
 
+![Build Status](https://travis-ci.org/svartalf/actix-httpbin.svg?branch=master)
+![Crates.io](https://img.shields.io/crates/v/actix-httpbin.svg)
+
 ## Advantages
 
  1. [Rust](https://rust-lang.org) is cool
