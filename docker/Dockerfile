@@ -5,14 +5,14 @@ ARG WORKDIR="/usr/local/src"
 ARG TARGET="/usr/local/src/target/release/actix-httpbin"
 
 WORKDIR ${WORKDIR}
-RUN git clone -q --depth 1 ${REPO_URL} ${WORKDIR}; \
-    RUSTFLAGS="-C target-cpu=native" cargo build --release --quiet; \
+RUN git clone --depth 1 ${REPO_URL} ${WORKDIR}; \
+    RUSTFLAGS="-C target-cpu=native" cargo build --release; \
     strip ${TARGET}
 
-FROM alpine:latest AS run
+FROM debian:stretch AS run
 
 ARG TARGET="/usr/local/src/target/release/actix-httpbin"
-COPY --from=build ${TARGET} /bin
+COPY --from=build ${TARGET} /usr/bin
 EXPOSE 80
 
-CMD ["/bin/actix-httpbin -p 80"]
+CMD ["/usr/bin/actix-httpbin", "-b", "0.0.0.0:80"]
