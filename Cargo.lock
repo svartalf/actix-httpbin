@@ -25,7 +25,7 @@ name = "actix-httpbin"
 version = "0.1.0"
 dependencies = [
  "actix-web 0.6.10 (registry+https://github.com/rust-lang/crates.io-index)",
- "actix-web-httpauth 0.0.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "actix-web-httpauth 0.0.3 (git+https://github.com/svartalf/actix-web-httpauth.git?branch=bearer)",
  "base64 0.9.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "bytes 0.4.7 (registry+https://github.com/rust-lang/crates.io-index)",
  "clap 2.31.2 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -93,13 +93,12 @@ dependencies = [
 
 [[package]]
 name = "actix-web-httpauth"
-version = "0.0.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
+version = "0.0.3"
+source = "git+https://github.com/svartalf/actix-web-httpauth.git?branch=bearer#71da54abd54db0982478eebcca1bf41bf2ebf54c"
 dependencies = [
  "actix-web 0.6.10 (registry+https://github.com/rust-lang/crates.io-index)",
  "base64 0.9.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "bytes 0.4.7 (registry+https://github.com/rust-lang/crates.io-index)",
- "percent-encoding 1.0.1 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -1700,7 +1699,7 @@ dependencies = [
 [metadata]
 "checksum actix 0.5.6 (registry+https://github.com/rust-lang/crates.io-index)" = "e767e3170dc7cdec50fe1b74d22fd9d2f4b78b97b2052a254b5acb07dae68634"
 "checksum actix-web 0.6.10 (registry+https://github.com/rust-lang/crates.io-index)" = "f3e8ee6c135276906d4af0a9a900ea7c230995e9328b44cd1a6d306918db47e4"
-"checksum actix-web-httpauth 0.0.2 (registry+https://github.com/rust-lang/crates.io-index)" = "c849fa11d0fcda284f1bfbb14faebc1920e06da19e525f3940a657321c7b3161"
+"checksum actix-web-httpauth 0.0.3 (git+https://github.com/svartalf/actix-web-httpauth.git?branch=bearer)" = "<none>"
 "checksum actix_derive 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)" = "c4b1dc922654b9aca7a8a31eab875fde804fa9fbd67f220f2e457787b23590f2"
 "checksum aho-corasick 0.6.4 (registry+https://github.com/rust-lang/crates.io-index)" = "d6531d44de723825aa81398a6415283229725a00fa30713812ab9323faa82fc4"
 "checksum arrayvec 0.4.7 (registry+https://github.com/rust-lang/crates.io-index)" = "a1e964f9e24d588183fcb43503abda40d288c8657dfc27311516ce2f05675aef"
