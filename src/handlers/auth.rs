@@ -1,4 +1,4 @@
-use actix_web::{HttpRequest, HttpResponse, Path, Result, http};
+use actix_web::{HttpRequest, HttpResponse, Path, Result, FromRequest, http};
 use actix_web_httpauth::extractors::{AuthenticationError, basic, bearer};
 
 use application::State;
@@ -22,6 +22,26 @@ pub fn basic_auth((req, path, auth): (HttpRequest<State>, Path<Credentials>, bas
     } else {
         Err(AuthenticationError::from(basic::Config::default()).into())
     }
+}
+
+/// Prompts the user for authorization using HTTP Basic Auth,
+/// but returns `HTTP 404` instead of `HTTP 401`
+pub fn hidden_basic_auth((req, path): (HttpRequest<State>, Path<Credentials>)) -> HttpResponse {
+    if let Ok(auth) = basic::BasicAuth::extract(&req) {
+        if path.user == auth.username() && Some(path.passwd.as_str()) == auth.password() {
+            let body = json!({
+                "authenticated": true,
+                "user": auth.username(),
+            });
+
+            return req.build_response(http::StatusCode::OK)
+                .body(body.to_string());
+        }
+    }
+
+    req.build_response(http::StatusCode::NOT_FOUND)
+        .finish()
+
 }
 
 /// Checks for HTTP Bearer auth

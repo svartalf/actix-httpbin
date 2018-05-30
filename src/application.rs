@@ -35,7 +35,7 @@ pub fn app() -> App<State> {
         // TODO: /digest-auth/{qop}/{user}{passwd}/{algorithm}
         // TODO: /digest-auth/{qop}/{user}{passwd}/{algorithm}/{stale_after}
         // TODO: /digest-auth/{qop}/{user}{passwd}
-        // TODO: /hidden-basic-auth/{user}/{passwd}
+        .resource("/hidden-basic-auth/{user}/{passwd}", |r| r.with(handlers::auth::hidden_basic_auth))
 
         // Status codes
         .resource("/status/{code}", |r| r.with(handlers::statuses::status))
