@@ -1,5 +1,5 @@
 use actix_web::{HttpRequest, HttpResponse, Path, Result, http};
-use actix_web_httpauth::extractors::{AuthenticationError, basic};
+use actix_web_httpauth::extractors::{AuthenticationError, basic, bearer};
 
 use application::State;
 
@@ -22,4 +22,15 @@ pub fn basic_auth((req, path, auth): (HttpRequest<State>, Path<Credentials>, bas
     } else {
         Err(AuthenticationError::from(basic::Config::default()).into())
     }
+}
+
+/// Checks for HTTP Bearer auth
+pub fn bearer_auth((req, auth): (HttpRequest<State>, bearer::BearerAuth)) -> HttpResponse {
+    let body = json!({
+        "authenticated": true,
+        "token": auth.token(),
+    });
+
+    req.build_response(http::StatusCode::OK)
+        .body(body.to_string())
 }

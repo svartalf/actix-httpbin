@@ -30,7 +30,7 @@ pub fn app() -> App<State> {
 
         // Auth
         .resource("/basic-auth/{user}/{passwd}", |r| r.with(handlers::auth::basic_auth))
-        // TODO: /bearer
+        .resource("/bearer", |r| r.with(handlers::auth::bearer_auth))
         // TODO: /digest-auth/{qop}/{user}{passwd}
         // TODO: /digest-auth/{qop}/{user}{passwd}/{algorithm}
         // TODO: /digest-auth/{qop}/{user}{passwd}/{algorithm}/{stale_after}
