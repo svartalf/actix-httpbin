@@ -29,7 +29,7 @@ clap = { version = "2.31", default-features = false }
 tera = "0.11.7"
 tokio-timer = "0.2.1"
 rand = "0.4.2"
-actix-web-httpauth = { git = "https://github.com/svartalf/actix-web-httpauth.git", branch = "bearer" }
+actix-web-httpauth = "0.0.3"
 
 [features]
 default = []
