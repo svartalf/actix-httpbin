@@ -17,7 +17,7 @@ pub fn basic_auth((req, path, auth): (HttpRequest<State>, Path<Credentials>, bas
             "user": auth.username(),
         });
         let resp = req.build_response(http::StatusCode::OK)
-            .body(body.to_string());
+            .json(body);
         Ok(resp)
     } else {
         Err(AuthenticationError::from(basic::Config::default()).into())
@@ -35,7 +35,7 @@ pub fn hidden_basic_auth((req, path): (HttpRequest<State>, Path<Credentials>)) -
             });
 
             return req.build_response(http::StatusCode::OK)
-                .body(body.to_string());
+                .json(body);
         }
     }
 
@@ -52,5 +52,5 @@ pub fn bearer_auth((req, auth): (HttpRequest<State>, bearer::BearerAuth)) -> Htt
     });
 
     req.build_response(http::StatusCode::OK)
-        .body(body.to_string())
+        .json(body)
 }
