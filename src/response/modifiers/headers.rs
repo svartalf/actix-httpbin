@@ -7,6 +7,7 @@ use map::PickyHashMap;
 
 /// Attach headers map to `Body`.
 #[derive(Debug, Clone)]
+#[must_use = "futures do nothing unless polled"]
 pub struct Headers<F>(F);
 
 impl<F> Headers<F> {

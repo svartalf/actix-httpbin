@@ -5,7 +5,8 @@ use serde::Serialize;
 use serde_json;
 use response::{Body, Builder, Error};
 
-
+#[derive(Debug, Clone)]
+#[must_use = "futures do nothing unless polled"]
 pub struct Extra<F, V> where V: Serialize {
     inner: F,
     key: &'static str,

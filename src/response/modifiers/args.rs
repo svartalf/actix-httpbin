@@ -7,6 +7,7 @@ use map::PickyHashMap;
 
 /// Attach query arguments to `Body`.
 #[derive(Debug, Clone)]
+#[must_use = "futures do nothing unless polled"]
 pub struct Args<F>(F);
 
 impl<F> Args<F> {

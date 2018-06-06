@@ -4,6 +4,7 @@ use response::{Body, Builder, Error};
 
 
 #[derive(Debug, Clone)]
+#[must_use = "futures do nothing unless polled"]
 pub struct Method<F>(F);
 
 impl<F> Method<F> {

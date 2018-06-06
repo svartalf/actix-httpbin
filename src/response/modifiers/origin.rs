@@ -4,6 +4,7 @@ use response::{Body, Builder, Error};
 
 /// Attach origin IP to `Body`.
 #[derive(Debug, Clone)]
+#[must_use = "futures do nothing unless polled"]
 pub struct Origin<F>(F);
 
 impl<F> Origin<F> {

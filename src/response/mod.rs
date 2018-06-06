@@ -34,6 +34,9 @@ pub struct Body<S> {
     headers: Option<PickyHashMap<String>>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
+    json: Option<Value>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     user_agent: Option<String>,
 
     #[serde(flatten)]
@@ -51,6 +54,7 @@ impl<S> Body<S> {
             args: None,
             headers: None,
             user_agent: None,
+            json: None,
             extra: HashMap::new(),
         }))
     }

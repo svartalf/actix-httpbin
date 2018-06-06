@@ -7,6 +7,7 @@ use response::{Body, Builder, Error};
 
 /// Attach query arguments to `Body`.
 #[derive(Debug, Clone)]
+#[must_use = "futures do nothing unless polled"]
 pub struct UserAgent<F>(F);
 
 impl<F> UserAgent<F> {
