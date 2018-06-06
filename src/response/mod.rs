@@ -34,10 +34,10 @@ pub struct Body<S> {
     headers: Option<PickyHashMap<String>>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    json: Option<Value>,
+    user_agent: Option<String>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    user_agent: Option<String>,
+    json: Option<Value>,
 
     #[serde(flatten)]
     extra: HashMap<&'static str, Value>,
@@ -84,6 +84,10 @@ pub trait Builder<S>: Future<Item=Body<S>> + Sized {
 
     fn with_user_agent(self) -> modifiers::UserAgent<Self> {
         modifiers::UserAgent::new(self)
+    }
+
+    fn with_json(self) -> modifiers::Json<Self, S> {
+        modifiers::Json::new(self)
     }
 
     fn with_extra<V: Serialize>(self, key: &'static str, value: V) -> modifiers::Extra<Self, V> {

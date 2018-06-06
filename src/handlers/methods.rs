@@ -10,6 +10,7 @@ pub fn get(req: HttpRequest<State>) -> Box<JsonFuture<State>> {
         .with_headers()
         .with_origin()
         .with_args()
+        .with_json()
         .into_json())
 }
 
