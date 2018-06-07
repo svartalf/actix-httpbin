@@ -1,5 +1,3 @@
-use std::mem;
-
 use serde_json::Value;
 use futures::{Future, Poll, Async};
 use actix_web::{HttpRequest, HttpMessage};
@@ -7,17 +5,27 @@ use actix_web::dev::JsonBody;
 
 use response::{Builder, Body, Error};
 
+enum State {
+    Body,
+    Json,
+}
 
 #[must_use = "futures do nothing unless polled"]
-pub enum Json<F, S> {
-    Body(F),
-    Json((Option<Body<S>>, JsonBody<HttpRequest<S>, Value>)),
-    Ready(Option<Body<S>>),
+pub struct Json<F, S> {
+    state: State,
+    body_f: F,
+    body: Option<Body<S>>,
+    json: Option<JsonBody<HttpRequest<S>, Value>>,
 }
 
 impl<F, S> Json<F, S> {
     pub fn new(f: F) -> Json<F, S> {
-        Json::Body(f)
+        Json{
+            state: State::Body,
+            body_f: f,
+            body: None,
+            json: None,
+        }
     }
 }
 
@@ -26,35 +34,32 @@ impl<F, S> Future for Json<F, S> where F: Future<Item=Body<S>, Error=Error>, S: 
     type Error = Error;
 
     fn poll(&mut self) -> Poll<<Self as Future>::Item, <Self as Future>::Error> {
-        match self {
-            Json::Body(ref mut f) => match f.poll() {
+        match self.state {
+            State::Body => match self.body_f.poll() {
                 Ok(Async::Ready(body)) => {
                     let req = body.request.clone();
-                    match mem::replace(self, Json::Json((Some(body), req.json()))) {
-                        Json::Body(_) => (),
-                        _ => panic!(),
-                    }
-
+                    let f2 = req.json();
+                    self.state = State::Json;
+                    self.body = Some(body);
+                    self.json = Some(f2);
                     Ok(Async::NotReady)
                 },
                 Ok(Async::NotReady) => Ok(Async::NotReady),
-                Err(e) => Err(e.into()),
+                Err(e) => Err(e)
             },
-            Json::Json((None, _)) => panic!(),
-            Json::Json((body, ref mut f)) => match f.poll() {
+            State::Json => match self.json.as_mut().unwrap().poll() {
                 Ok(Async::Ready(json)) => {
-                    let mut body = body.take().unwrap();
+                    let mut body = self.body.take().unwrap();
                     body.json = Some(json);
-                    match mem::replace(self, Json::Ready(Some(body))) {
-                        Json::Json(_) => (),
-                        _ => panic!(),
-                    }
-                    Ok(Async::NotReady)
+                    Ok(Async::Ready(body))
+                },
+                // If there was error during JSON parsing, just ignoring it.
+                Err(_) => {
+                    let mut body = self.body.take().unwrap();
+                    Ok(Async::Ready(body))
                 },
                 Ok(Async::NotReady) => Ok(Async::NotReady),
-                Err(e) => Err(e.into())
-            },
-            Json::Ready(body) => Ok(Async::Ready(body.take().unwrap()))
+            }
         }
     }
 }

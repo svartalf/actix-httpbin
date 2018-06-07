@@ -23,7 +23,7 @@ pub fn app() -> App<State> {
 
         // HTTP methods
         .resource("/get", |r| r.method(Method::GET).with(handlers::methods::get))
-        // TODO: /post
+        .resource("/post", |r| r.method(Method::POST).with(handlers::methods::post))
         // TODO: /patch
         // TODO: /put
         // TODO: /delete

@@ -10,6 +10,15 @@ pub fn get(req: HttpRequest<State>) -> Box<JsonFuture<State>> {
         .with_headers()
         .with_origin()
         .with_args()
+        .into_json())
+}
+
+pub fn post(req: HttpRequest<State>) -> Box<JsonFuture<State>> {
+    Box::new(Body::new(req)
+        .with_url()
+        .with_headers()
+        .with_origin()
+        .with_args()
         .with_json()
         .into_json())
 }
