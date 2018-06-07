@@ -38,10 +38,9 @@ impl<F, S> Future for Json<F, S> where F: Future<Item=Body<S>, Error=Error>, S: 
             State::Body => match self.body_f.poll() {
                 Ok(Async::Ready(body)) => {
                     let req = body.request.clone();
-                    let f2 = req.json();
                     self.state = State::Json;
                     self.body = Some(body);
-                    self.json = Some(f2);
+                    self.json = Some(req.json());
                     Ok(Async::NotReady)
                 },
                 Ok(Async::NotReady) => Ok(Async::NotReady),
